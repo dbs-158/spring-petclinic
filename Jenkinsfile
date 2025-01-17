@@ -59,6 +59,7 @@ pipeline {
                 script {
                     echo "Deploying application to EKS cluster: ${CLUSTER_NAME}"
                     sh """
+                    aws eks update-kubeconfig --region ap-south-1 --name my-eks-cluster
                     kubectl apply -f Demployment.yaml
                     """
                 }
