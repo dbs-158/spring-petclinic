@@ -35,7 +35,8 @@ pipeline {
                         --template-file ${TEMPLATE_FILE} \
                         --stack-name ${STACK_NAME} \
                         --capabilities CAPABILITY_NAMED_IAM \
-                        --parameter-overrides EnvironmentName=dev
+                        --parameter-overrides EnvironmentName=dev ClusterName=my-eks-cluster \
+                        -- region ${REGION}
                     """
                 }
             }
