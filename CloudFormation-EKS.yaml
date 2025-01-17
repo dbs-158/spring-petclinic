@@ -75,7 +75,7 @@ Resources:
         Ec2SshKey: myownkey
         SourceSecurityGroups:
           - sg-0ace7d1327a06bd32
-      Outputs:
+Outputs:
   ECRRepositoryUri:
     Value: !GetAtt ECRRepository.RepositoryUri
     Description: URI of the ECR repository

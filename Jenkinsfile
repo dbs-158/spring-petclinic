@@ -36,7 +36,7 @@ pipeline {
                         --stack-name ${STACK_NAME} \
                         --capabilities CAPABILITY_NAMED_IAM \
                         --parameter-overrides EnvironmentName=dev ClusterName=my-eks-cluster \
-                        -- region ${REGION}
+                        --region ${REGION}
                     """
                 }
             }
