@@ -46,10 +46,10 @@ pipeline {
                 script {
                     echo "Logging into Amazon ECR and pushing Docker image"
                     sh """
-                    aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com
-                    docker build -t ${ECR_REPOSITORY} .
-                    docker tag ${DOCKER_IMAGE} ${ECR_URL}
-                    docker push ${ECR_URL}
+                   aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 442426891871.dkr.ecr.ap-south-1.amazonaws.com
+                    docker build -t my-ecr-repository .
+                    docker tag my-ecr-repository:latest 442426891871.dkr.ecr.ap-south-1.amazonaws.com/my-ecr-repository:latest
+                    docker push 442426891871.dkr.ecr.ap-south-1.amazonaws.com/my-ecr-repository:latest
                     """
                 }
             }
