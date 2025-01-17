@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: EKS cluster, Node Group, ECR.
+
+Parameters:
+  ClusterName:
+    Type: String
+    Description: Name of the EKS Cluster
+    Default: MyEksCluster
+
+  NodeGroupName:
+    Type: String
+    Description: Name of the EKS Node Group
+    Default: MyNodeGroup
+
+  NodeInstanceType:
+    Type: String
+    Description: EC2 instance type for the nodes
+    Default: t3.medium
+
+  DesiredCapacity:
+    Type: Number
+    Description: Desired number of nodes
+    Default: 2
+
+  MaxCapacity:
+    Type: Number
+    Description: Maximum number of nodes
+    Default: 5
+
+  MinCapacity:
+    Type: Number
+    Description: Minimum number of nodes
+    Default: 1
+
+Resources:
+  ### Amazon ECR ###
+  ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: my-ecr-repository
+
+  ### Amazon EKS Cluster ###
+  EksCluster:
+    Type: AWS::EKS::Cluster
+    Properties:
+      Name: !Ref ClusterName
+      RoleArn: arn:aws:iam::442426891871:role/awsmyekscluster 
+      ResourcesVpcConfig:
+        SubnetIds:
+          - subnet-08533ee38332f7441
+          - subnet-0a55a89c936a634ef
+        SecurityGroupIds:
+          - sg-0ace7d1327a06bd32  
+  ### Amazon EKS Node Group ###
+  EksNodeGroup:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      NodegroupName: !Ref NodeGroupName
+      ClusterName: !Ref EksCluster
+      Subnets:
+          - subnet-08533ee38332f7441
+          - subnet-0a55a89c936a634ef
+      # InstanceTypes:
+      #   - !Ref NodeInstanceType
+      ScalingConfig:
+        DesiredSize: !Ref DesiredCapacity
+        MaxSize: !Ref MaxCapacity
+        MinSize: !Ref MinCapacity
+      NodeRole: arn:aws:iam::442426891871:role/awsnodegrouppy
+      AmiType: AL2023_x86_64_STANDARD 
+      InstanceTypes:
+        - t3.medium 
+      DiskSize: 20 
+      RemoteAccess:
+        Ec2SshKey: myownkey
+        SourceSecurityGroups:
+          - sg-0ace7d1327a06bd32
+      Outputs:
+  ECRRepositoryUri:
+    Value: !GetAtt ECRRepository.RepositoryUri
+    Description: URI of the ECR repository
+
+  EksClusterName:
+    Value: !Ref EksCluster
+    Description: Name of the EKS Cluster
